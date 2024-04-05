@@ -1,5 +1,6 @@
 package com.example.binarytree;
 
+
 import com.example.ElementNotFoundException;
 import com.example.Tree;
 
@@ -51,7 +52,7 @@ public class BinaryTree<T> implements Tree<T> {
         BinaryTreeNode<T> current = findNode(targetElement, root);
 
         if (current == null) throw new ElementNotFoundException(this.getClass()
-                                                                    .getCanonicalName());
+                .getCanonicalName());
 
         return (current.getElement());
     }
@@ -206,46 +207,82 @@ public class BinaryTree<T> implements Tree<T> {
     @Override
     public Iterator<T> iteratorPreOrder() {
 
-        // TODO implement pre order iterator
-        return null;
+        Queue<T> tempList = new LinkedList<>();
+        preOrder(root, tempList);
+        return tempList.iterator();
     }
 
     private void preOrder(BinaryTreeNode<T> node, Queue<T> tempList) {
-        // TODO implement pre order iterator
+
+        if (node != null) {
+            tempList.add(node.getElement());  // visit node
+            preOrder(node.getLeft(), tempList);
+            preOrder(node.getRight(), tempList);
+        }
+
     }
 
     @Override
     public Iterator<T> iteratorInOrder() {
 
-        // TODO implement in order iterator
-        return null;
+        Queue<T> tempList = new LinkedList<>();
+        inOrder(root, tempList);
+        return tempList.iterator();
     }
 
     private void inOrder(BinaryTreeNode<T> node, Queue<T> tempList) {
-        // TODO implement in order iterator
+
+        if (node != null) {
+            inOrder(node.getLeft(), tempList);
+            tempList.add(node.getElement());  // visit node
+            inOrder(node.getRight(), tempList);
+        }
     }
 
     @Override
     public Iterator<T> iteratorPostOrder() {
 
-        // TODO implement post order iterator
-        return null;
+        Queue<T> tempList = new LinkedList<>();
+        postOrder(root, tempList);
+        return tempList.iterator();
     }
 
     private void postOrder(BinaryTreeNode<T> node, Queue<T> tempList) {
-        // TODO implement post order iterator
+
+        if (node != null) {
+            postOrder(node.getLeft(), tempList);
+            postOrder(node.getRight(), tempList);
+            tempList.add(node.getElement());  // visit node
+        }
     }
 
     @Override
     public Iterator<T> iteratorLevelOrder() {
 
-        // TODO implement level order iterator
-        return null;
+        Queue<T> tempList = new LinkedList<>();
+        levelOrder(root, tempList);
+        return tempList.iterator();
     }
 
     public void levelOrder(BinaryTreeNode<T> node, Queue<T> tempList) {
 
-        // TODO implement level order iterator
+        Queue<BinaryTreeNode<T>> queue = new LinkedList<>();
+        queue.add(node);
+
+        while (!queue.isEmpty()) {
+
+            BinaryTreeNode<T> tempNode = queue.poll();
+            tempList.add(tempNode.element); // visit node
+
+            if (tempNode.left != null) {
+                queue.add(tempNode.left);
+            }
+
+            if (tempNode.right != null) {
+                queue.add(tempNode.right);
+            }
+        }
+
 
     }
 
@@ -305,7 +342,7 @@ public class BinaryTree<T> implements Tree<T> {
                     String aa;
                     if (n.getElement() != null) {
                         aa = n.getElement()
-                              .toString();
+                                .toString();
                     } else {
                         aa = "null";
                     }
@@ -332,7 +369,7 @@ public class BinaryTree<T> implements Tree<T> {
         }
 
         int perPiece = lines.get(lines.size() - 1)
-                            .size() * (widest + 4);
+                .size() * (widest + 4);
         for (int i = 0; i < lines.size(); i++) {
             List<String> line = lines.get(i);
             int hpw = (int) Math.floor(perPiece / 2f) - 1;

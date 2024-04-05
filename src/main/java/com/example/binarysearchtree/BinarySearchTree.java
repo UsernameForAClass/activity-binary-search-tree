@@ -1,11 +1,13 @@
 package com.example.binarysearchtree;
 
+
+
 import com.example.ElementNotFoundException;
 import com.example.Tree;
 
 import java.util.*;
 
-public class BinarySearchTree<T extends Comparable> implements Tree<T> {
+public class BinarySearchTree<T extends Comparable<T>> implements Tree<T> {
 
     private BinaryTreeNode<T> root;
     private int count;
@@ -28,7 +30,7 @@ public class BinarySearchTree<T extends Comparable> implements Tree<T> {
 
         T insertedElement = null;
         if (this.root == null) {
-            this.root = new BinaryTreeNode(element);
+            this.root = new BinaryTreeNode<>(element);
             insertedElement = root.element;
         } else {
             insertedElement = insertInto(element, root);
@@ -68,23 +70,32 @@ public class BinarySearchTree<T extends Comparable> implements Tree<T> {
 
         if (target == null) {
             throw new ElementNotFoundException(this.getClass()
-                                                   .getCanonicalName());
+                    .getCanonicalName());
         }
 
         return (target.getElement());
     }
 
     private BinaryTreeNode<T> findNode(T targetElement, BinaryTreeNode<T> next) {
-        if (next == null) return null;
 
-        if (next.getElement()
-                .equals(targetElement)) return next;
+        // Have to handle nulls
+        if (next == null || next.getElement() == null) {
+            return null;
+        }
 
-        BinaryTreeNode<T> temp = findNode(targetElement, next.getLeft());
+        // Found it!
+        if (next.getElement().equals(targetElement)) {
+            return next;
+        }
 
-        if (temp == null) temp = findNode(targetElement, next.getRight());
+        // Traverse the children
+        if(next.element.compareTo(targetElement) > 0) {
+            next = findNode(targetElement, next.getLeft());
+        } else if(next.element.compareTo(targetElement) < 0) {
+            next = findNode(targetElement, next.getRight());
+        }
 
-        return temp;
+        return next;
     }
 
     @Override
@@ -176,7 +187,11 @@ public class BinarySearchTree<T extends Comparable> implements Tree<T> {
     }
 
     private void preOrder(BinaryTreeNode<T> node, Queue<T> tempList) {
-        // TODO implement pre order iterator
+        if (node != null) {
+            tempList.add(node.getElement());
+            preOrder(node.getLeft(), tempList);
+            preOrder(node.getRight(), tempList);
+        }
     }
 
     public Iterator<T> iteratorInOrder() {
@@ -188,7 +203,11 @@ public class BinarySearchTree<T extends Comparable> implements Tree<T> {
     }
 
     private void inOrder(BinaryTreeNode<T> node, Queue<T> tempList) {
-        // TODO implement in order iterator
+        if (node != null) {
+            inOrder(node.getLeft(), tempList);
+            tempList.add(node.getElement());
+            inOrder(node.getRight(), tempList);
+        }
     }
 
     public Iterator<T> iteratorPostOrder() {
@@ -200,7 +219,11 @@ public class BinarySearchTree<T extends Comparable> implements Tree<T> {
     }
 
     private void postOrder(BinaryTreeNode<T> node, Queue<T> tempList) {
-        // TODO implement post order iterator
+        if (node != null) {
+            postOrder(node.getLeft(), tempList);
+            postOrder(node.getRight(), tempList);
+            tempList.add(node.getElement());
+        }
     }
 
     public Iterator<T> iteratorLevelOrder() {
@@ -213,7 +236,23 @@ public class BinarySearchTree<T extends Comparable> implements Tree<T> {
 
     private void levelOrder(BinaryTreeNode<T> node, Queue<T> tempList) {
 
-        // TODO implement level order iterator
+        Queue<BinaryTreeNode<T>> queue = new LinkedList<>();
+        queue.add(node);
+
+        while (!queue.isEmpty()) {
+
+            BinaryTreeNode<T> tempNode = queue.poll();
+            tempList.add(tempNode.element);
+
+            if (tempNode.left != null) {
+                queue.add(tempNode.left);
+            }
+
+            if (tempNode.right != null) {
+                queue.add(tempNode.right);
+            }
+
+        }
 
     }
 
@@ -272,7 +311,7 @@ public class BinarySearchTree<T extends Comparable> implements Tree<T> {
                     String aa;
                     if (n.getElement() != null) {
                         aa = n.getElement()
-                              .toString();
+                                .toString();
                     } else {
                         aa = "null";
                     }
@@ -299,7 +338,7 @@ public class BinarySearchTree<T extends Comparable> implements Tree<T> {
         }
 
         int perPiece = lines.get(lines.size() - 1)
-                            .size() * (widest + 4);
+                .size() * (widest + 4);
         for (int i = 0; i < lines.size(); i++) {
             List<String> line = lines.get(i);
             int hpw = (int) Math.floor(perPiece / 2f) - 1;

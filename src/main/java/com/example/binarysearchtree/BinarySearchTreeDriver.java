@@ -1,7 +1,9 @@
 package com.example.binarysearchtree;
 
+
+
+import com.example.ElementNotFoundException;
 import com.example.Tree;
-import com.example.binarytree.BinaryTree;
 
 import java.util.Iterator;
 
@@ -10,32 +12,24 @@ public class BinarySearchTreeDriver {
     public static void main(String[] args) {
 
         Tree<Integer> bst = new BinarySearchTree<>();
-
         bst.insert(8);
         bst.insert(10);
-        bst.insert(11);
+        bst.insert(14);
         bst.insert(3);
         bst.insert(6);
         bst.insert(7);
         bst.insert(1);
         bst.insert(4);
+        bst.insert(15);
         bst.insert(12);
-        bst.insert(2);
         bst.insert(9);
-        bst.insert(5);
 
-        /*bst.insert(1);
-        bst.insert(2);
-        bst.insert(3);
-        bst.insert(4);
-        bst.insert(5);
-        bst.insert(6);
-        bst.insert(7);
-        bst.insert(8);
-        bst.insert(9);
-        bst.insert(10);
-        bst.insert(11);
-        bst.insert(12);*/
+        try {
+            System.out.println(bst.search(12));  // found
+            System.out.println(bst.search(2));   // not found
+        } catch (ElementNotFoundException e) {
+            System.out.println("Element not found");
+        }
 
         System.out.println("In Order traversal of binary tree will be:");
         printTraversal(bst.iteratorInOrder());
@@ -48,15 +42,15 @@ public class BinarySearchTreeDriver {
 
         System.out.println("\nLevel Order traversal of binary tree will be:");
         printTraversal(bst.iteratorLevelOrder());
-        
+
         System.out.println();
         ((BinarySearchTree<Integer>) bst).printTopDownTree();
 
-        // bst.delete(8);
+        bst.delete(8);
 
-        // System.out.println();
-        // ((BinarySearchTree<Integer>) bst).printTopDownTree();
-      
+        System.out.println();
+        ((BinarySearchTree<Integer>) bst).printTopDownTree();
+
     }
 
     private static void printTraversal(Iterator iterator) {
